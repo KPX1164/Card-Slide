@@ -1,0 +1,40 @@
+<!-- video.ejs -->
+<div>
+  <% if (row.description.includes("youtube")) { %> <% if (typeof row.description
+  === 'object' && 'text' in row.description && 'hyperlink' in row.description) {
+  %>
+
+  <iframe
+    width="560"
+    height="315"
+    class="mt-10 mb-10"
+    src="<%= row.description.text.replace('watch?v=', 'embed/') %>"
+    frameborder="0"
+    allowfullscreen
+  ></iframe>
+  <% } else { %>
+  <iframe
+    width="560"
+    height="315"
+    class="mt-10 mb-10"
+    src="<%= row.description.replace('watch?v=', 'embed/') %>"
+    frameborder="0"
+    allowfullscreen
+  ></iframe>
+  <% } %> <% } else { %> <% if (typeof row.description === 'object' && 'text' in
+  row.description && 'hyperlink' in row.description) { %>
+  <video
+    width="560"
+    height="315"
+    class="mt-10 mb-10"
+    src="<%= row.description.text %>"
+  ></video>
+  <% } else { %>
+  <video
+    width="560"
+    height="315"
+    class="mt-10 mb-10"
+    src="<%= row.description %>"
+  ></video>
+  <% } %> <% } %>
+</div>

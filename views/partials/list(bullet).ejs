@@ -1,0 +1,12 @@
+<% let data = row.content.split(","); %> <% data.forEach(function(item, index) {
+  %>
+  <div class="w-4/5 HStack mt-5<%= row.movement === 'reveal' ? 'reveal ' : '' %>">
+    <div class="w-1/5 VStack items-center justify-center">
+      <div class="bullet"></div>
+    </div>
+    <div class="w-4/5 VStack items-start justify-center">
+      <p class="p2 font-normal text-justify"><%= item %></p>
+    </div>
+  </div>
+  <% }); %>
+  

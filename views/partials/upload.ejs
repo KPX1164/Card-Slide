@@ -1,0 +1,225 @@
+<style>
+  /* Add your styles here if needed */
+  #dropArea {
+    width: 300px;
+    height: 200px;
+    border: 2px dashed rgb(96 165 250);
+    text-align: center;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 16px;
+  }
+
+  #csvPreviews {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .previewContainer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
+    text-align: center;
+    position: relative;
+  }
+
+  .previewTable {
+    max-width: 300px;
+    max-height: 200px;
+    overflow: auto;
+    border: 1px solid #000;
+    border-radius: 20px;
+    font-size: 0.6rem;
+  }
+
+  .previewTable table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .previewTable td {
+    padding: 8px;
+    border: 1px solid #000;
+  }
+
+  .fileName {
+    margin-top: 15px;
+  }
+
+  .checkboxCircle {
+    margin-top: 5px;
+    width: 20px;
+    height: 20px;
+  }
+</style>
+
+<section class="font-primary w-full VStack items-center just text-center">
+  <form
+    action="/upload"
+    method="post"
+    enctype="multipart/form-data"
+    id="uploadForm"
+    onsubmit="console.log('Form submitted');"
+  >
+    <!-- CSRF token here if you're using it -->
+    <input
+      type="file"
+      name="fileInput"
+      id="fileInput"
+      style="display: none"
+      multiple
+      onchange="handleFileInputChange(event)"
+    />
+    <div
+      id="dropArea"
+      ondrop="handleDrop(event)"
+      ondragover="handleDragOver(event)"
+      onclick="triggerFileInputClick()"
+      class="VStack items-center justify-center"
+    >
+      <p class="text-base text-gray-400 gap-4">
+        ลาง และ ปล่อย CSV ไฟล์ที่นี่ <br /><span class="underline"
+          >หรือ คลิกเพื่อเลือก</span
+        >
+      </p>
+      <br />
+    </div>
+    <div id="csvPreviews"></div>
+
+    <button type="submit" class="w-80 h-12 rounded-full text-white bg-blue-400">
+      เปลี่ยนแปลง
+    </button>
+  </form>
+</section>
+
+<script>
+  const uploadedFiles = [];
+
+  function handleDragOver(event) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+  }
+
+  function handleDrop(event) {
+    event.preventDefault();
+
+    const files = event.dataTransfer.files;
+    if (files.length > 0) {
+      for (const file of files) {
+        const fileName = file.name;
+
+        // Check if the file name already exists in uploadedFiles array
+        if (!uploadedFiles.includes(fileName)) {
+          // Use a regular expression to check if the file name matches the required pattern
+          const regex = /^(jetlin|maeping|nantaram|phayakam|nongyai)\d+\.csv$/;
+          if (regex.test(fileName)) {
+            uploadedFiles.push(fileName);
+            document.querySelector("#fileInput").files = files;
+            console.log(uploadedFiles);
+            readCSVFile(file); // Pass the file object directly
+          } else {
+            alert(
+              "Please drop a CSV file with a valid name (e.g., jetlin01.csv, mapping01.csv, nantaram01.csv, phayakam01.csv, nongyai01.csv)."
+            );
+          }
+        } else {
+          alert("File with the same name already uploaded: " + fileName);
+        }
+      }
+    }
+
+    // Clear uploadedFiles array after a drop
+    uploadedFiles.length = 0;
+  }
+
+  function handleFileInputChange(event) {
+    const files = event.target.files;
+    handleFiles(files);
+
+    // Clear uploadedFiles array after submitting the form
+    uploadedFiles.length = 0;
+  }
+
+  function triggerFileInputClick() {
+    document.getElementById("fileInput").click();
+  }
+  function handleFiles(files) {
+    for (const file of files) {
+      const fileName = file.name;
+      console.log(file);
+
+      // Check if the file name already exists in uploadedFiles array
+      if (!uploadedFiles.includes(fileName)) {
+        // Use a regular expression to check if the file name matches the required pattern
+        const regex = /^(jetlin|maeping|nantaram|phayakam|nongyai)\d+\.csv$/;
+        if (regex.test(fileName)) {
+          uploadedFiles.push(fileName);
+          console.log(uploadedFiles);
+          readCSVFile(file);
+        } else {
+          alert(
+            "Please drop a CSV file with a valid name (e.g., jetlin01.csv, mapping01.csv, nantaram01.csv, phayakam01.csv, nongyai01.csv)."
+          );
+        }
+      } else {
+        alert("File with the same name already uploaded: " + fileName);
+      }
+    }
+  }
+
+  function readCSVFile(file) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const csvData = e.target.result;
+      displayCSVPreview(file.name, csvData);
+    };
+
+    reader.readAsText(file);
+  }
+
+  function displayCSVPreview(fileName, csvData) {
+    const csvPreviewsElement = document.getElementById("csvPreviews");
+
+    const previewContainer = document.createElement("div");
+    previewContainer.className = "previewContainer";
+
+    const previewTableContainer = document.createElement("div");
+    previewTableContainer.className = "previewTable";
+
+    const previewTable = document.createElement("table");
+    previewTable.style.width = "100%"; // Make the table responsive
+    const rows = csvData.split("\n");
+    for (const row of rows) {
+      const rowData = row.split(",");
+      const tableRow = document.createElement("tr");
+      for (const data of rowData) {
+        const tableData = document.createElement("td");
+        tableData.textContent = data;
+        tableRow.appendChild(tableData);
+      }
+      previewTable.appendChild(tableRow);
+    }
+
+    previewTableContainer.appendChild(previewTable);
+
+    // Display file name below the table
+    const fileNameElement = document.createElement("div");
+    fileNameElement.className = "fileName";
+    fileNameElement.textContent = fileName;
+
+    // Checkbox with circle style
+    const checkboxCircle = document.createElement("input");
+    checkboxCircle.type = "radio";
+    checkboxCircle.className = "checkboxCircle";
+
+    previewContainer.appendChild(previewTableContainer);
+    previewContainer.appendChild(fileNameElement);
+    previewContainer.appendChild(checkboxCircle);
+
+    csvPreviewsElement.appendChild(previewContainer);
+  }
+</script>

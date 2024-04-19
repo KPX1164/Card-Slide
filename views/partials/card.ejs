@@ -1,0 +1,17 @@
+<% const pairs = data.content.split(','); %> <% pairs.forEach((pair, index) => {
+%> <% const openParenIndex = pair.indexOf('('); %> <% const closeParenIndex =
+pair.indexOf(')'); %> <% const url = pair.substring(0, openParenIndex).trim();
+%> <% const description = pair.substring(openParenIndex + 1, closeParenIndex);
+%>
+
+<a class="VStack h-96 rounded-lg justify-between mt-10 shadow-lg <%= data.movement === 'reveal' ? 'reveal ' : '' %>" href="/jetlin04/product<%= index + 1 %>?current=<%= index + 1 %>">
+  <div class="overflow-hidden items-center flex justify-center rounded-tl-lg rounded-tr-lg h-full">
+    <img src="<%= url %>" alt="" class="w-full h-full object-cover object-center" />
+  </div>
+  <div class="h-32 p-5 bg-white  rounded-br-lg rounded-bl-lg">
+    <p class="caption font-semibold text-deep-blue">ผลผลิตงานออกแบบ <%= index + 1 %></p>
+    <p class="p1 font-medium"><%= description %></p>
+  </div>
+</a>
+
+<% }) %>

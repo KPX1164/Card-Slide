@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head'); %>
+</head>
+<body class="font-primary">
+  <section class="font-primary w-full VStack items-center">
+    <% data.forEach(row => { %>
+      <% if (row.type === 'text') { %>
+        <% if (row.style === 'title' || row.style === 'heading' || row.style === 'subheading' || row.style === 'paragraph' || row.style === 'list(bullet)' || row.style === 'list(number)' || row.style === 'quote' || row.style === 'timeline') { %>
+          <%- include(`../partials/${row.style}.ejs`, { row: row }) %>
+        <% } %>
+      <% } else if (row.type === 'image') { %>
+        <% if (row.style === 'slideshow' || row.style === 'fit' || row.style === 'full' || row.style === 'carousel' || row.style === 'gallery-3') { %>
+          <%- include(`../partials/${row.style}.ejs`, { row: row }) %>
+        <% } %>
+      <% } else if (row.type === 'link') { %>
+        <% if (row.style === 'attachment') { %>
+          <%- include('../partials/attachment.ejs', { row: row }) %>
+        <% } %>
+      <% } %>
+    <% }) %>
+  </section>
+  <footer>
+    <%- include('../partials/footer'); %>
+  </footer>
+</body>
+</html>

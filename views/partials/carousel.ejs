@@ -1,0 +1,138 @@
+<head>
+  <script>
+    $(document).ready(function () {
+      $(".carousel").carousel({
+        indicators: true,
+      });
+    });
+
+
+  function popUp(url, description) {
+    document.getElementById("popupImage").src = url;
+    document.getElementById("popupDescription").innerText = description;
+    document.getElementById("popupOverlay").style.display = "block";
+    document.body.style.overflow = "hidden"; // Disable scrolling
+  }
+
+  function closePopup() {
+    document.getElementById("popupOverlay").style.display = "none";
+    document.body.style.overflow = ""; // Re-enable scrolling
+  }
+  </script>
+  <style>
+
+    .carousel {
+      perspective: 950px;
+      /* transform: translateY(-100px); */
+    }
+
+    .carousel carousel-item {
+      width: 7050px;
+    }
+
+    .carousel img {
+      height: auto;
+    }
+
+    .carousel .active {
+      background-color: transparent;
+      margin: 0;
+      padding: 0;
+    }
+
+    .carousel .indicators .indicator-item {
+      background-color: #bbb;
+    }
+
+    .carousel .indicators .indicator-item.active {
+      background-color: #717171;
+    }
+
+    .description {
+      visibility: hidden;
+    }
+
+    .carousel-item.active .description {
+      visibility: visible;
+    }
+    .carousel-item {
+      width: 100%;
+    }
+    .w-optimised {
+      max-height: 200px;
+      min-height: 200px;
+
+    }
+    /* For screens wider than 420px */
+@media screen and (min-width: 420px) {
+  .w-optimised {
+    width: 400px; /* Set the width to 420px */
+    max-height: 270px;
+  }
+}
+
+  </style>
+</head>
+
+<div id="popupOverlay" class="popup-overlay" onclick="closePopup()">
+  <div
+    class="popup-content w-full h-full p-4 items-center VStack justify-center relative"
+  >
+    <button
+      class="absolute top-0 right-0 m-4 p-2 text-white bg-gray-700 rounded-full"
+      onclick="closePopup()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18 18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+    <img id="popupImage" class="popup-image" src="" alt="Popup Image" />
+    <p
+      id="popupDescription"
+      class="popup-description text-center text-white p-4 text-sm"
+    ></p>
+  </div>
+</div>
+
+<div class="carousel mt-10 pt-10 pb-10 bg-light-blue">
+  <% const pairs = row.content.split(','); %> <% pairs.forEach((pair, index) =>{
+  %> <% const openParenIndex = pair.indexOf('('); %> <% const closeParenIndex =
+  pair.indexOf(')'); %> <% const url = pair.substring(0,openParenIndex).trim();
+  %> <% const description = pair.substring(openParenIndex + 1, closeParenIndex);
+  %>
+
+  <div
+    class="carousel-item w-full VStack justify-center items-center text-center"
+  >
+    <div
+      class="w-full min-w-96 w-optimised VStack items-center justify-center relative overflow-hidden"
+    >
+      <img src="<%= url %>" class="object-cover object-center" alt="Image"  onclick="popUp('<%= url %>','<%= description %>')" />
+    </div>
+
+    <p class="mt-4 caption font-normal description"><%= description %></p>
+  </div>
+
+  <% }) %>
+
+  <ol class="carousel-indicators absolute bottom-0 mb-6 right-0 left-0">
+    <% for (let i = 0; i < pairs.length; i++) { %>
+    <li
+      data-target="#carouselExampleControls"
+      data-slide-to="<%= i %>"
+      class="active"
+      aria-current="true"
+    ></li>
+    <% } %>
+  </ol>
+</div>

@@ -1,0 +1,9 @@
+<%
+let commaIndex = row.content.indexOf(',');
+let content = row.content.substring(0, commaIndex);
+let author = row.content.substring(commaIndex + 1);
+%>
+<div class="VStack items-center justify-center mt-10 mb-10 bg-light-blue pt-10 pb-10 gap-5 w-screen <%= row.movement === 'reveal' ? 'reveal ' : '' %>">
+  <div class="w-4/5"><p class="p1 font-normal"><%= content %></p></div>
+  <div class="w-4/5"><p class="caption font-light"><%= author.trim() %></p></div>
+</div>

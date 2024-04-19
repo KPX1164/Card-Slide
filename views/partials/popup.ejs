@@ -1,0 +1,73 @@
+
+
+
+
+
+
+<div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50"></div>
+<!-- Overlay -->
+
+<div id="popup"
+  class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-5 rounded-xl z-50 min-h-[300px] min-w-[500px] flex flex-col justify-between"
+>
+  <!-- Popup Container -->
+  <div class="flex-grow">
+    <div class="flex justify-between items-center">
+      <h5 class="font-medium"><%= title %></h5>
+      <% if (!button) { %>
+
+      <div
+        class="bg-gray-200 rounded-full p-1 flex items-center justify-center text-center h-full"
+        onclick="togglePanel()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-5 h-5 text-gray-500"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18 18 6M6 6l12 12"
+          />
+        </svg>
+      </div>
+      <% } %>
+    </div>
+    <p class=" p-4 text-gray-500 text-base"><%= description %></p>
+  </div>
+  <div class="VStack justify-between">
+    <div class="section-break"></div>
+    <p class="text-red-500 mt-4">ข้อผิดพลาดที่อาจพบ</p>
+    <div class="p-2 HStack">
+      <p class="caption "><span class="text-red-500">การอัพโหลดหลายไฟล์พร้อมกัน - </span>กรณีที่อัพโหลดมากกว่า2ครั้งจะอัพเดตแค่ครั้งล่าสุด เช่น ลางและวางเพื่ออัพโหลด jetlin03, phayakam01 จากนั้น ลางและวางไฟล์อื่น nantaram02 ระบบจะอัพเดตแค่ nantaram02</p>
+
+    </div>
+
+  </div>
+  <% if (button) { %>
+  <div class="HStack justify-between">
+    <button class="p-2" id="closeButton" onclick="togglePanel()">Cancel</button
+    ><button
+      class="bg-blue-400 w-48 text-white rounded-full p-2"
+      id="closeButton"
+    >
+      Continue
+    </button>
+  </div>
+
+  <% } %>
+</div>
+<script>
+var panel = document.getElementById('popup');
+var overlay = document.getElementById('overlay');
+
+function togglePanel() {
+    panel.classList.toggle('hidden');
+    overlay.classList.toggle('hidden');
+}
+
+</script>

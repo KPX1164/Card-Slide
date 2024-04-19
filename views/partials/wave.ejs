@@ -1,0 +1,19 @@
+<style>
+  .curve {
+    left: 0;
+    height: 20px;
+    width: 100%;
+    background-image: url("/images/wave-blue.png");
+    background-size: contain;
+    animation: ani_wave 30s alternate-reverse infinite;
+  }
+  @keyframes ani_wave {
+    0% {
+      background-position-x: 2000px;
+    }
+    100% {
+      background-position-x: 0;
+    }
+  }
+</style>
+<div class="curve"></div>

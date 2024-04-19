@@ -1,0 +1,174 @@
+<style>
+  .popup-image-container {
+    width: 95vw; /* Set container width to 80% of viewport width */
+    height: auto; /* Set container height to 80% of viewport width */
+    overflow: hidden;
+    position: relative;
+  }
+
+  .popup-image {
+    width: 100%; /* Ensure image fills the container */
+    height: 100%; /* Ensure image fills the container */
+    object-fit: contain; /* Maintain aspect ratio of the image */
+    cursor: zoom-in; /* Change cursor to indicate zoom functionality */
+    transition: transform 0.5s ease; /* Add smooth transition for zoom effect */
+  }
+</style>
+
+
+<%
+// Function to parse content and return an object with url and description
+function parseContent(content) {
+  const commaIndex = content.indexOf(',');
+  const url = content.substring(0, commaIndex);
+  const description = content.substring(commaIndex + 1);
+  return { url, description };
+}
+
+// Determine the content and parse it
+const { url, description } = (typeof row.content === 'object' && 'text' in row.content && 'hyperlink' in row.content)
+  ? parseContent(row.content.text)
+  : parseContent(row.content);
+%>
+
+<div id="popupOverlay" class="popup-overlay" onclick="closePopup()">
+  <div class="popup-content w-full h-full p-4 items-center VStack justify-center relative">
+    <button class="absolute top-0 right-0 m-4 p-2 text-white bg-gray-700 rounded-full" onclick="closePopup()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <div class="popup-image-container cursor-pointer">
+      <img id="popupImage" class="popup-image" src="" alt="Popup Image" onclick="event.stopPropagation();" 
+           onmousedown="startDrag(event)" onmousemove="whileDrag(event)" onmouseup="stopDrag()" onmouseout="stopDrag()"
+           ontouchstart="startDrag(event)" ontouchmove="whileDrag(event)" ontouchend="stopDrag()" ontouchcancel="stopDrag()" />
+    </div>
+
+    <div class="HStack bg-white rounded-lg mt-4 gap-5 text-gray-500">
+      <button id="zoomin" class="button p-5" onclick="zoomer.zoom(0.25); event.stopPropagation(); console.log('Zoom In Clicked')">+</button>
+      <button id="zoomout" class="button p-5" onclick="zoomer.zoom(-0.25); event.stopPropagation(); console.log('Zoom Out Clicked')">-</button>
+      <button id="resetZoom" class="button p-5" onclick="resetZoom(); event.stopPropagation(); console.log('Reset Zoom')">Reset</button>
+    </div>
+
+    <p id="popupDescription" class="popup-description text-center text-white p-4 text-sm"></p>
+  </div>
+</div>
+
+
+
+<div class="mt-10 pt-10 pb-10 bg-light-blue VStack items-center justify-center h-full w-screen <%= row.movement === 'reveal' ? 'reveal ' : '' %>">
+  <div class="h-full w-4/5 VStack items-center text-center justify-center">
+    <div class="VStack items-center justify-center">
+      <div class="w-full VStack items-center justify-center">
+        <img src="<%= url %>" class="object-contain max-h-full" alt="Image" onclick="popUp('<%= url %>','<%= description %>')" />
+      </div>
+    </div>
+    <p class="mt-4 caption font-normal"><%= description %></p>
+  </div>
+</div>
+<script>
+  let imgEle = null,
+      zoomFactor = 1.0,
+      isDragging = false,
+      startX = 0,
+      startY = 0,
+      translateX = 0,
+      translateY = 0;
+
+  const zoom = (zoomIncrement) => {
+      if (!imgEle) return;
+
+      zoomFactor += zoomIncrement;
+
+      if (zoomFactor <= 1.0) {
+          zoomFactor = 1.0;
+          resetDrag(); // Reset drag if zoom is less than or equal to 1
+      }
+
+      const newWidth = imgEle.naturalWidth * zoomFactor;
+      const newHeight = imgEle.naturalHeight * zoomFactor;
+
+      imgEle.style.transform = `scale(${zoomFactor}) translate(${translateX}px, ${translateY}px)`;
+  };
+
+  const startDrag = (event) => {
+      if (zoomFactor <= 1.0) return;
+
+      event.preventDefault(); // Prevent default action
+      isDragging = true;
+      if (event.type === 'mousedown') {
+          startX = event.clientX - translateX;
+          startY = event.clientY - translateY;
+      } else if (event.type === 'touchstart') {
+          const touch = event.touches[0];
+          startX = touch.clientX - translateX;
+          startY = touch.clientY - translateY;
+      }
+  };
+
+  const stopDrag = () => {
+      isDragging = false;
+  };
+
+  const whileDrag = (event) => {
+      if (!isDragging) return;
+
+      event.preventDefault(); // Prevent default action
+      if (event.type === 'mousemove') {
+          translateX = event.clientX - startX;
+          translateY = event.clientY - startY;
+      } else if (event.type === 'touchmove') {
+          const touch = event.touches[0];
+          translateX = touch.clientX - startX;
+          translateY = touch.clientY - startY;
+      }
+      imgEle.style.transform = `scale(${zoomFactor}) translate(${translateX}px, ${translateY}px)`;
+  };
+
+  const resetDrag = () => {
+      translateX = 0;
+      translateY = 0;
+      imgEle.style.transform = `scale(${zoomFactor}) translate(${translateX}px, ${translateY}px)`;
+  };
+
+  const zoomer = {
+      zoom,
+      startDrag,
+      stopDrag,
+      whileDrag
+  };
+
+  function resetZoom() {
+      if (!imgEle) return;
+
+      zoomFactor = 1.0;
+      resetDrag(); // Reset drag along with zoom
+  }
+
+  function popUp(url, description) {
+      imgEle = document.getElementById("popupImage");
+      imgEle.src = url;
+      resetZoom(); // Reset zoom when image changes
+      document.getElementById("popupDescription").innerText = description;
+      document.getElementById("popupOverlay").style.display = "block";
+      document.body.style.overflow = "hidden"; // Disable scrolling
+  }
+
+  function closePopup() {
+      document.getElementById("popupOverlay").style.display = "none";
+      document.body.style.overflow = ""; // Re-enable scrolling
+  }
+
+  // Move image with mouse cursor
+  document.addEventListener('mousemove', whileDrag);
+  document.addEventListener('touchmove', whileDrag);
+
+  // Touch event handling
+  document.addEventListener('mousedown', startDrag);
+  document.addEventListener('touchstart', startDrag);
+
+  document.addEventListener('mouseup', stopDrag);
+  document.addEventListener('touchend', stopDrag);
+</script>

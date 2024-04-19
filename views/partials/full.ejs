@@ -1,0 +1,76 @@
+<style>
+  .popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+  }
+</style>
+
+<% // Function to parse content and return an object with url and description
+function parseContent(content) { const commaIndex = content.indexOf(','); const
+url = content.substring(0, commaIndex); const description =
+content.substring(commaIndex + 1); return { url, description }; } // Determine
+the content and parse it const { url, description } = (typeof row.content ===
+'object' && 'text' in row.content && 'hyperlink' in row.content) ?
+parseContent(row.content.text) : parseContent(row.content); %>
+<div id="popupOverlay" class="popup-overlay">
+  <div
+    class="popup-content w-full h-full p-4 items-center VStack justify-center relative"
+  >
+    <button
+      class="absolute top-0 right-0 m-4 p-2 text-white bg-gray-700 rounded-full"
+      onclick="closePopup()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18 18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+    <img id="popupImage" class="popup-image" src="" alt="Popup Image" />
+    <p
+      id="popupDescription"
+      class="popup-description text-center text-white p-4 text-sm"
+    ></p>
+  </div>
+</div>
+<div
+  class="mt-10 pt-10 pb-10 VStack items-center justify-center <%= row.movement === 'reveal' ? 'reveal ' : '' %>"
+>
+  <div
+    class="w-4/5 VStack bg-transparent items-center justify-center text-center gap-10"
+  >
+    <img src="<%= url %>" class="object-cover mb-4" alt="Image" />
+    <p class="caption font-normal text-center"><%= description %></p>
+  </div>
+</div>
+<script>
+  function popUp(url, description) {
+    document.getElementById("popupImage").src = url;
+    document.getElementById("popupDescription").innerText = description;
+    document.getElementById("popupOverlay").style.display = "block";
+  }
+
+  function closePopup() {
+    document.getElementById("popupOverlay").style.display = "none";
+  }
+
+  $(document).ready(function () {
+    $(".carousel").carousel({
+      indicators: true,
+    });
+  });
+</script>

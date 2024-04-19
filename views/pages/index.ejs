@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+    <style>
+      /* Initially hide the popup */
+      #popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+      /* Center the content of the popup */
+      #panel {
+        margin: auto;
+      }
+    </style>
+    <script>
+      function setupEventListeners() {
+        window.onload = function () {
+          document
+            .querySelector(".text-gray-500")
+            .addEventListener("click", function (event) {
+              event.preventDefault();
+              togglePopup(); // Toggle the popup
+            });
+
+          // Add an event listener to close the popup when clicking outside its content
+          document
+            .getElementById("popup")
+            .addEventListener("click", function (event) {
+              if (event.target === this) {
+                togglePopup(); // Toggle the popup
+              }
+            });
+        };
+      }
+
+      function togglePopup() {
+        var popup = document.getElementById("popup");
+        popup.style.display = popup.style.display === "none" ? "flex" : "none";
+      }
+
+      function showPopup() {
+        document.getElementById("popup").style.display = "flex";
+      }
+
+      function hidePopup() {
+        document.getElementById("popup").style.display = "none";
+      }
+    </script>
+  </head>
+  <body>
+    <main>
+      <div class="VStack m-10 items-center">
+        <div class="bg-light-blue rounded-lg VStack w-full p-10 h-full">
+          <div class="HStack items-end justify-start">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-16 h-16 font-light text-blue-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M10.05 4.575a1.575 1.575 0 1 0-3.15 0v3m3.15-3v-1.5a1.575 1.575 0 0 1 3.15 0v1.5m-3.15 0 .075 5.925m3.075.75V4.575m0 0a1.575 1.575 0 0 1 3.15 0V15M6.9 7.575a1.575 1.575 0 1 0-3.15 0v8.175a6.75 6.75 0 0 0 6.75 6.75h2.018a5.25 5.25 0 0 0 3.712-1.538l1.732-1.732a5.25 5.25 0 0 0 1.538-3.712l.003-2.024a.668.668 0 0 1 .198-.471 1.575 1.575 0 1 0-2.228-2.228 3.818 3.818 0 0 0-1.12 2.687M6.9 7.575V12m6.27 4.318A4.49 4.49 0 0 1 16.35 15m.002 0h-.002"
+              />
+            </svg>
+            <h3 class="text-blue-500">Privacy labels</h3>
+          </div>
+          <div class="caption pt-7 pb-10">
+            Our website uses background scripts to provide animations and
+            enhance your browsing experience.
+
+            <div class="pt-5">
+              We want to clarify that these scripts
+              <span class="font-semibold"
+                >do not collect any personal data</span
+              >
+              from you. They are solely used to run animations on our website.
+            </div>
+            <div class="pt-5">
+              We may update our Privacy Policy from time to time. We will notify
+              you of any changes by posting the new Privacy Policy on this page.
+            </div>
+          </div>
+          <div class="VStackitems-center justify-center">
+            <div class="HStack items-center justify-center">
+              <a
+                class="bg-blue-500 rounded-full text-white h-12 w-full VStack justify-center items-center"
+                href="/main"
+                >Open home page</a
+              >
+            </div>
+            <div class="HStack items-center justify-center">
+              <a
+                class="text-gray-500 mt-5"
+                href="javascript:void(0);"
+                onclick="showPopup();"
+                >Open Anyway</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="popup"
+        class="h-screen w-screen bg-white bg-opacity-20 backdrop-blur-lg rounded VStack items-center justify-center"
+      >
+        <div
+          id="panel"
+          class="bg-white w-60 h-80 VStack text-center items-center justify-between rounded-lg drop-shadow-sm"
+        >
+        <div class="h-full w-full text-center text-gray-600">
+          <div class=" p-10  h-5/6 gap-4 VStack items-start justify-between">
+            <a href="/jetlin01">JetLin 1</a>
+            <a href="/jetlin02">JetLin 2</a>
+
+            <a href="/jetlin03">JetLin 3</a>
+
+            <a href="/jetlin04">JetLin 4</a>
+
+          </div>
+          <div class="section-break"></div>
+          <div class=" h-1/6 items-center VStack justify-center"><a href="/">Close</a></div>
+
+        </div>
+          
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

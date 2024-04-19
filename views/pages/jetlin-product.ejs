@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+    <style>
+      .carousel .indicators {
+        top: 0;
+        bottom: unset;
+        left: 0;
+        right: unset;
+        text-align: left;
+        padding-left: 2.5rem;
+        padding-top: 1rem;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        height: 100vh;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+      }
+
+      main > section {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+      }
+
+      main > section:nth-child(odd) {
+        background: #80ffd4;
+      }
+
+      #hero-b {
+        background: rgb(0, 0, 0);
+        background: linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 1) 0%,
+          rgba(255, 255, 255, 0) 100%
+        );
+
+        scroll-snap-align: start;
+      }
+      #section-hero1 {
+        background-image: url("/resources/jetlin/jetlin04/covers/x1.jpg");
+        background-size: cover;
+        background-position: center;
+      }
+      #section-hero2 {
+        background-image: url("/resources/jetlin/jetlin04/covers/x2.jpg");
+        background-size: cover;
+        background-position: center;
+      }
+      #section-hero3 {
+        background-image: url("/resources/jetlin/jetlin04/covers/x3.jpg");
+        background-size: cover;
+        background-position: center;
+      }
+
+      h3 {
+        position: sticky;
+        top: 0;
+        z-index: 1; /* Ensure it's above other content */
+      }
+    </style>
+    <script>
+      $(document).ready(function () {
+        $(".carousel").carousel({
+          indicators: true,
+          fullWidth: true,
+        });
+      });
+    </script>
+  </head>
+  <body class="font-primary">
+    <div class="carousel carousel-slider h-screen">
+      <div class="carousel-item overflow-y-auto w-full h-full" href="#one!">
+        <main>
+          <section id="section-hero1" class="VStack">
+            <h3 class="font-bold w-full p-10 pt-20">
+              เวียงเจ็ดลิน <br />กับการท่องเที่ยว
+            </h3>
+
+            <div id="hero-a" class="h-3/5 w-full"></div>
+
+            <div id="hero-b" class="h-2/5 w-full"></div>
+          </section>
+          <section class="font-primary w-full VStack text-black" style="overflow-y: auto;">
+            <!-- render only product == 1 -->
+            <% data['1'].forEach(row => { %>
+              <% if (row.type === 'text') { %>
+                <% if (row.style === 'title' || row.style === 'heading' || row.style === 'subheading' || row.style === 'paragraph' || row.style === 'list(bullet)' || row.style === 'list(number)' || row.style === 'quote' || row.style === 'timeline') { %>
+                  <%- include(`../partials/${row.style}.ejs`, { row: row }) %>
+                <% } %>
+              <% } else if (row.type === 'image') { %>
+                <% if (row.style === 'slideshow' || row.style === 'fit' || row.style === 'full' || row.style === 'carousel' || row.style === 'gallery-3') { %>
+                  <%- include(`../partials/${row.style}.ejs`, { row: row }) %>
+                <% } %>
+              <% } else if (row.type === 'link') { %>
+                <% if (row.style === 'attachment') { %>
+                  <%- include('../partials/Attachment.ejs', { row: row }) %>
+                <% } %>
+              <% } %>
+            <% }) %>
+          </section>
+          
+          
+          
+        </main>
+      </div>
+      <div class="carousel-item w-full h-full" href="#one!">
+        <main>
+          <section id="section-hero2" class="VStack">
+            <h3 class="font-bold w-full p-10 pt-20">
+              เวียงเจ็ดลินกับ <br />การประกวดแบบ
+            </h3>
+
+            <div id="hero-a" class="h-3/5 w-full"></div>
+
+            <div id="hero-b" class="h-2/5 w-full"></div>
+          </section>
+          <section class="font-primary w-full VStack text-black" style="overflow-y: auto;">
+            <!-- render only product == 1 -->
+            <% data['1'].forEach(row => { %>
+              <% if (row.type === 'text') { %>
+                <% if (row.style === 'title' || row.style === 'heading' || row.style === 'subheading' || row.style === 'paragraph' || row.style === 'list(bullet)' || row.style === 'list(number)' || row.style === 'quote' || row.style === 'timeline') { %>
+                  <%- include(`../partials/${row.style}.ejs`, { row: row }) %>
+                <% } %>
+              <% } else if (row.type === 'image') { %>
+                <% if (row.style === 'slideshow' || row.style === 'fit' || row.style === 'full' || row.style === 'carousel' || row.style === 'gallery-3') { %>
+                  <%- include(`../partials/${row.style}.ejs`, { row: row }) %>
+                <% } %>
+              <% } else if (row.type === 'link') { %>
+                <% if (row.style === 'attachment') { %>
+                  <%- include('../partials/Attachment.ejs', { row: row }) %>
+                <% } %>
+              <% } %>
+            <% }) %>
+          </section>
+        </main>
+      </div>
+      <div class="carousel-item w-full h-full" href="#one!">
+        <main>
+          <section id="section-hero3" class="VStack">
+            <h3 class="font-bold w-full p-10 pt-20">
+              เวียงเจ็ดลินกับ <br />
+              กับของชำร่วย
+            </h3>
+
+            <div id="hero-a" class="h-3/5 w-full"></div>
+
+            <div id="hero-b" class="h-2/5 w-full"></div>
+          </section>
+          <section class="font-primary w-full VStack text-black" style="overflow-y: auto;">
+            <!-- render only product == 1 -->
+            <% data['1'].forEach(row => { %>
+              <% if (row.type === 'text') { %>
+                <% if (row.style === 'title' || row.style === 'heading' || row.style === 'subheading' || row.style === 'paragraph' || row.style === 'list(bullet)' || row.style === 'list(number)' || row.style === 'quote' || row.style === 'timeline') { %>
+                  <%- include(`../partials/${row.style}.ejs`, { row: row }) %>
+                <% } %>
+              <% } else if (row.type === 'image') { %>
+                <% if (row.style === 'slideshow' || row.style === 'fit' || row.style === 'full' || row.style === 'carousel' || row.style === 'gallery-3') { %>
+                  <%- include(`../partials/${row.style}.ejs`, { row: row }) %>
+                <% } %>
+              <% } else if (row.type === 'link') { %>
+                <% if (row.style === 'attachment') { %>
+                  <%- include('../partials/Attachment.ejs', { row: row }) %>
+                <% } %>
+              <% } %>
+            <% }) %>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
